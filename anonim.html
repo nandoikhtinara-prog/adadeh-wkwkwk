@@ -4,28 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pesan Rahasia</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+      }
+    </script>
+
     <style>
-        body { background: #000; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { width: 90%; max-width: 400px; background: #111; padding: 30px; border-radius: 20px; border: 1px solid #333; text-align: center; }
-        h1 { font-size: 1.5rem; }
-        textarea { width: 100%; height: 150px; background: #222; border: 1px solid #444; border-radius: 10px; color: white; padding: 15px; margin: 15px 0; resize: none; }
-        button { width: 100%; padding: 15px; background: white; color: black; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh;
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: white;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            background: #111;
+            border-radius: 20px;
+            border: 1px solid #333;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        h1 { font-size: 1.5rem; margin-bottom: 8px; color: #fff; }
+        p { font-size: 0.85rem; color: #888; margin-bottom: 25px; }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 15px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        textarea:focus { border-color: #555; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-submit:disabled { background: #444; color: #888; cursor: not-allowed; }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 0.7rem;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
+    <div class="container">
         <h1>Kirim Pesan Rahasia</h1>
-        <p>Identitasmu tetap anonim.</p>
-        
-        <form action="https://formsubmit.co/Nandoikhtinara@gmail.com" method="POST">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_next" value="https://nandoikhtinara-prog.github.io/nanzzzz/anonim.html">
-            
-            <textarea name="Pesan_Anonim" placeholder="Tulis pesanmu di sini..." required></textarea>
-            <button type="submit">KIRIM SEKARANG</button>
-        </form>
+        <p>Tulis apa pun di bawah ini. Identitasmu tidak akan pernah diketahui.</p>
+
+        <div id="form-anonim">
+            <textarea id="isiPesan" placeholder="Ketik pesanmu di sini..." required></textarea>
+            <button type="button" id="btnKirim" class="btn-submit" onclick="prosesKirim()">KIRIM ANONIM</button>
+        </div>
+
+        <div class="footer">Encrypted & Anonymous Bot</div>
     </div>
+
+    <script>
+        function prosesKirim() {
+            // DATA SUDAH SAYA ISI OTOMATIS
+            const nomorWA = "628817245247"; 
+            const apiKey = ""; 
+
+            const pesanInput = document.getElementById("isiPesan");
+            const tombol = document.getElementById("btnKirim");
+            const pesanTeks = pesanInput.value;
+
+            if (pesanTeks.trim() === "") {
+                alert("Isi pesan dulu dong!");
+                return;
+            }
+
+            // Animasi Loading
+            tombol.disabled = true;
+            tombol.innerText = "MENGIRIM...";
+
+            // Link API CallMeBot
+            const url = `https://api.callmebot.com/whatsapp.php?phone=${nomorWA}&text=${encodeURIComponent("Pesan Anonim Baru:\n\n" + pesanTeks)}&apikey=${apiKey}`;
+
+            // Proses Kirim
+            fetch(url, { mode: 'no-cors' })
+            .then(() => {
+                alert("Berhasil! Pesanmu sudah dikirim secara anonim.");
+                pesanInput.value = "";
+                tombol.disabled = false;
+                tombol.innerText = "KIRIM ANONIM";
+            })
+            .catch((err) => {
+                alert("Waduh, ada masalah koneksi. Coba lagi ya!");
+                tombol.disabled = false;
+                tombol.innerText = "KIRIM ANONIM";
+            });
+        }
+    </script>
 
 </body>
 </html>
